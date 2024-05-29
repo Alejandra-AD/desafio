@@ -5,10 +5,8 @@ import com.aluracursos.desafio.model.DatosLibros;
 import com.aluracursos.desafio.service.ConsumoAPI;
 import com.aluracursos.desafio.service.ConvierteDatos;
 
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Optional;
-import java.util.Scanner;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class Principal {
     private Scanner scanner = new Scanner(System.in);
@@ -26,7 +24,7 @@ public class Principal {
 
 
         //top 10 libros mas descargados
-        System.out.println("Top 10 libros mas descargados");
+        System.out.println("\n**Top 10 libros mas descargados**");
         datos.resultados().stream()
                 .sorted(Comparator.comparing(DatosLibros::numeroDescargas).reversed())//reversed porque sorted ordena de menor a mayor
                 .limit(10)
@@ -46,6 +44,15 @@ public class Principal {
         }else {
             System.out.println("Libro no encontrado");
         }
+
+        //trabajando con estadísticas
+
+        DoubleSummaryStatistics est = datos.resultados().stream()
+                .filter(d -> d.numeroDescargas()>0)
+                .collect(Collectors.summarizingDouble(DatosLibros::numeroDescargas));
+        System.out.println("\n**ESTADÍSTICAS**"+"\nMáximo número de descargas: "+ est.getMax()
+                +"\nMín número de descargas: " + est.getMin()
+                + "\nPromedio de descargas de libros: " +est.getAverage());
 
 
 
